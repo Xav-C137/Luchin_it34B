@@ -1,31 +1,39 @@
 <?php
 require_once 'config/config.php';
-require_once 'includes/activity-logger.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = trim($_POST['action'] ?? '');
+$user_id = "root" ?? null;
+$user_email = "root" ?? null;
 
-    $user_id = $_SESSION['user_id'] ?? null;
-    $user_email = $_SESSION['user_email'] ?? null;
-    
-}
+$buttons = [
+    'Login',
+    "Logout",
+    'Create record',
+    'Update record',
+    'Delete record',
+    'View record',
+    'Upload file', 
+    'Download',
+    'Search',
+    'Generate report'
+];
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Welcome to the Document</h1>
+<table border = "1" cellpadding = "10">
+    <tr>
+        <th>Action</th>
+        <th>Test</th>
+    </tr>
 
-    <form method="POST">
-    <button
-        type="submit"
-        name="action"
-        >Sample</button>
-     </form>
-</body>
-</html>
-
+    <?php foreach ($buttons as $button): ?>
+        <tr>
+            <td><?= htmlspecialchars($button) ?></td>
+            <td>
+                <form method = "post">
+                <input type = "hidden" name = "action"
+                 value = "<?= htmlspecialchars($button) ?>"
+                 >
+                 <button type = "submit">Test</button>
+                </form>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
