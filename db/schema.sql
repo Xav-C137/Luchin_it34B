@@ -13,22 +13,24 @@
         activity_log_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-CREATE TABLE IF NOT EXISTS users(
+
+CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_email VARCHAR(50) NOT NULL UNIQUE,
-    user_username VARCHAR(50) NOT NULL,
+
+    user_email VARCHAR(50) UNIQUE NOT NULL,
+    user_username VARCHAR(20) UNIQUE NOT NULL,
     user_password VARCHAR(255) NOT NULL,
-    user_role ENUM('admin', 'manager','user') DEFAULT 'user',
+    user_role ENUM('admin', 'manager', 'user') NOT NULL DEFAULT 'user',
 
     user_created_at TIMESTAMP
-    DEFAULT CURRENT_TIMESTAMP,
+        DEFAULT CURRENT_TIMESTAMP,
 
-    user_updated_at TIMESTAMP DEFAULT 
-    CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    user_updated_at TIMESTAMP
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
 
-
-) ENGINE=InnoDB 
-DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO users
 (
