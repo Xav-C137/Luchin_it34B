@@ -12,14 +12,30 @@ $error='';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = trim($_POST['login'] ?? '');
     $password = $_POST['password'] ?? '';
-
-    if(loginUser($pdo, $login, $password)) {
-        echo 'Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php';
-        header('Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php');
-        exit;
-
-    } 
+ 
         $error = 'Invalid login credentials.';
+
+        if ($login==='' || $password==='') {
+            // Log incomplete login attempt
+            logActivity($pdo,null,$login, 'login','failed');
+
+        } else {
+        
+            if(loginUser($pdo, $login, $password)) {
+                // Log successful login attempt
+                logActivity(
+                $pdo,$_SESSION['user_id'],
+                $_SESSION['user_email'],
+                'login',
+                'success'
+                );
+             echo 'Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php';
+            header('Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php');
+            exit;
+
+            }
+
+        }
 }
 
 ?>
@@ -43,7 +59,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <input type="text"
                    name="login"
-                   required
                    style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
             <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
@@ -52,7 +67,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <input type="password"
                    name="password"
-                   required
                    style="width: 100%; padding: 10px; margin-bottom: 25px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
             <button type="submit"
