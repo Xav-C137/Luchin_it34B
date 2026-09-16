@@ -1,3 +1,20 @@
+<?php
+
+require '../../config/config.php';
+require '../../config/function.php';
+
+requireRole('user');
+
+logActivity(   
+    $pdo,
+    $_SESSION['user_id'],
+    $_SESSION['user_email'],
+    'view_activity_logs',
+    'success'
+);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,5 +23,6 @@
     </head>
     <body>
         <h1>Welcome, User</h1>
+        <a href="../../auth/signout.php">Sign Out</a>
     </body>
 </html>
