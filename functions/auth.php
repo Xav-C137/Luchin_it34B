@@ -1,8 +1,4 @@
 <?php
-function redirect($path) {
-    header("Location: " . BASE_URL . $path);
-    exit();
-}
 
 function loginUser($pdo,$login,$password) {
     #Query 2

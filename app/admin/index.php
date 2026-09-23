@@ -1,6 +1,5 @@
 <?php
 require '../../config/config.php';
-require '../../config/function.php';
 
 requireRole('admin');
 
@@ -23,7 +22,7 @@ $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +38,7 @@ $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>Record_ID</th>
                     <th>User ID</th>
                     <th>User Email</th>
+                    <th>Status</th>
                     <th>Action</th>
                     <th>IP Address</th>
                     <th>User Agent</th>

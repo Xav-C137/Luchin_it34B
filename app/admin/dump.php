@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 require '../../config/config.php';
 require '../../config/function.php';
 
@@ -49,9 +49,8 @@ $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>IP Address</th>
                     <th>User Agent</th>
                     <th>Date & Time</th>
-            </tr>
+                  </tr>
           </thead>
-          <tbody>
             <tbody>
                 <?php foreach($activities as $activity):?>
                     <tr>
@@ -76,4 +75,4 @@ $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
         autoWidth: false,
     })
 </script>
-</html>
+</html> -->
