@@ -11,8 +11,7 @@ $error='';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = trim($_POST['login'] ?? '');
     $password = $_POST['password'] ?? '';
- 
-        $error = 'Invalid login credentials.';
+    $error = 'Invalid login credentials.';
 
         if ($login==='' || $password==='') {
             // Log incomplete login attempt
