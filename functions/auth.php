@@ -3,7 +3,7 @@
 function loginUser($pdo,$login,$password) {
     #Query 2
     $sql = "
-         SELECT
+        SELECT
             user_id,
             user_email,
             user_username,
@@ -26,6 +26,12 @@ function loginUser($pdo,$login,$password) {
 
     if(!password_verify($password, $user['user_password'])) {
         return false;
+    }
+
+    // Check if user already has an active session
+    if(hasActiveUserSession($pdo,$user['user_id'])) {
+        return 'active_session';
+        
     }
 
     $_SESSION['user_id'] = $user['user_id'];
