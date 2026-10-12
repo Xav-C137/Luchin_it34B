@@ -1,7 +1,6 @@
 <?php 
 
 // Start User Session
-
 function startUserSession($pdo) {
     if(!isset($_SESSION['user_id'])){
         return false;
@@ -66,7 +65,7 @@ function hasActiveUserSession($pdo, $user_id) {
     ");
 
     $stmt->execute([
-        'user_id' => $user_id
+        'user_id' => $user_id 
     ]);
 
     return (bool) $stmt->fetchColumn();
