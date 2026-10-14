@@ -92,21 +92,24 @@ function checkSessionTimeout() {
                 'logout-session-timeout',
                 'success'
                 );
+
+            // End database session
+            endUserSession($pdo);
+
+            // Destroy php session
+            session_unset();
+            session_destroy();
+
+            // Redirect 
+            header(
+                'Location: '.
+                BASE_URL . 
+                '/index.php?timeout=1' 
+            );
+            
+            exit;
         }
 
-        // End database session
-        endUserSession($pdo);
-
-        // Destroy php session
-        session_unset();
-        session_destroy();
-
-        // Redirect 
-        header(
-            'Location: '.
-            BASE_URL . 
-            '/index.php?timeout=1' 
-        );
     }
     // Update last activity
     $_SESSION['last_activity'] = time();
