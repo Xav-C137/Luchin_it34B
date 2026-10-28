@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+// session_start();
 
 // Generate CSRF Token
 function generateCsrfToken(){
@@ -34,7 +34,5 @@ function requireCsrfToken(){
         die('Invalid CSRF Token');
     }
 }
-
-
 
 ?>

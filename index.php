@@ -9,13 +9,12 @@ if(isset($_SESSION['user_id'])) {
 $error='';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    requireCsrfToken();
-
     $login = trim($_POST['login'] ?? '');
     $password = $_POST['password'] ?? '';
 
     $error = 'Invalid login credentials.';
+
+    requireCsrfToken();
 
         if ($login === '' || $password === '') {
             
@@ -130,7 +129,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Username or Email
             </label>
 
-            <input type="hidden" name="csrf_token" value="<?php  htmlspecialchars(generateCsrfToken()); ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
 
             <input type="text"
                     name="login"
@@ -153,6 +152,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (isset($_GET['timeout'])): ?>
             <p class="timeout-message">
                 Your session has expired due to inactivity. Please log in again.
+            </p>
+        <?php endif; ?>
+        <?php if ($error !== ''): ?>
+            <p class="form-error" role="alert">
+                <?php echo htmlspecialchars($error); ?>
             </p>
         <?php endif; ?>
     </body>
