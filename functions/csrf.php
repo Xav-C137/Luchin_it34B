@@ -22,7 +22,7 @@ function verifyCsrfToken($token){
 
 // Require CSRF Token
 function requireCsrfToken(){
-    if($_SERVE['REQUEST_METHOD'] !== 'POST'){
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
         return;
     }
 
