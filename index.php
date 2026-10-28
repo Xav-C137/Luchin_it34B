@@ -37,7 +37,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'success'
                 );
 
-            echo 'Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php';
             header('Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php');
             exit;
 
