@@ -14,6 +14,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $error = 'Invalid login credentials.';
 
+    requireCsrfToken();
+
         if ($login === '' || $password === '') {
             
             // Log incomplete login attempt
@@ -37,7 +39,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'success'
                 );
 
-            echo 'Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php';
             header('Location: ' . BASE_URL . '/app/' . $_SESSION['user_role'] . '/index.php');
             exit;
 
@@ -61,39 +62,101 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>My Website</title>
+
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #f2f2f2;
+                font-family: Arial, sans-serif;
+            }
+
+            .login-form {
+                width: 300px;
+                margin: 100px auto;
+                padding: 30px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            }
+
+            .form-label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+            .form-input--password {
+                margin-bottom: 25px;
+            }
+
+            .btn-submit {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: #fff;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .timeout-message {
+                text-align: center;
+                color: red;
+                font-weight: bold;
+            }
+        </style>
     </head>
 
-    <body style="margin: 0; padding: 0; background-color: #f2f2f2; font-family: Arial, sans-serif;">
+    <body>
 
-        <form method="POST"
-                style="width: 300px; margin: 100px auto; padding: 30px; background-color: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+        <form method="POST" class="login-form">
 
-            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+            <label class="form-label">
                 Username or Email
             </label>
 
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(generateCsrfToken()); ?>">
+
             <input type="text"
                     name="login"
-                    style="width: 100%; padding: 10px; margin-bottom: 20px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+                    class="form-input">
 
-            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
+            <label class="form-label">
                 Password
             </label>
 
             <input type="password"
                     name="password"
-                    style="width: 100%; padding: 10px; margin-bottom: 25px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+                    class="form-input form-input--password">
 
-            <button type="submit"
-                    style="width: 100%; padding: 12px; border: none; border-radius: 5px; background-color: #007bff; color: white; font-size: 16px; font-weight: bold; cursor: pointer;">
+            <button type="submit" class="btn-submit">
                 Sign In
             </button>
 
         </form>
 
         <?php if (isset($_GET['timeout'])): ?>
-            <p style="text-align: center; color: red; font-weight: bold;">
+            <p class="timeout-message">
                 Your session has expired due to inactivity. Please log in again.
+            </p>
+        <?php endif; ?>
+        <?php if ($error !== ''): ?>
+            <p class="form-error" role="alert">
+                <?php echo htmlspecialchars($error); ?>
             </p>
         <?php endif; ?>
     </body>

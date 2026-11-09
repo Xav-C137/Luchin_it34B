@@ -5,11 +5,13 @@ require_once(__DIR__ . '/../functions/activity.php');
 require_once(__DIR__ . '/../functions/auth.php');
 require_once(__DIR__ . '/../functions/redirect.php');
 require_once(__DIR__ . '/../functions/sessions.php');
+require_once(__DIR__ . '/../functions/csrf.php');
+require_once(__DIR__ . '/../functions/csv.php');
 
 define('BASE_URL', 'http://localhost/dev/it34b');
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'it34-lab-dcb');
+define('DB_NAME', 'it34_lab_dcb');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
