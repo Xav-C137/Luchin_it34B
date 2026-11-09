@@ -3,6 +3,9 @@ require '../../config/config.php';
 
 requireRole('admin');
 
+$section = $_GET['section'] ?? '';
+$action  = $_GET['action'] ?? '';
+
 logActivity(   
     $pdo,
     $_SESSION['user_id'],
@@ -11,7 +14,7 @@ logActivity(
     'success'
 );
 
-// Activity Logs Query#3
+// Activity Logs Query #3
 $stmt = $pdo->query("
     SELECT *
     FROM activity_logs
@@ -51,6 +54,58 @@ function formatDuration($seconds): string {
     );
 }
 
+if($action==='export'){
+    if($section==='activity-logs'){
+
+    $stmt = $pdo->query("
+        SELECT *
+        FROM activity_logs
+        ORDER BY activity_log_created_at DESC
+    ");
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    logActivity(
+        $pdo,
+        $_SESSION['user_id'],
+        $_SESSION['user_email'],
+        'export_activity_logs',
+        'success'
+    );
+
+    foreach ($rows as &$r) {
+        $r['session_end'] = $r['session_end'] ?? 'Active';
+
+        if ($r['session_duration'] !== null) {
+            $s = (int)$r['session_duration'];
+            $r['session_duration'] = $s;
+            $hours = floor($s, 3600);
+            $minutes = floor($s % 3600, 60);
+            $seconds = $s % 60;
+            $r['session_duration'] = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        } else {
+            $r['session_duration'] = 'Active';
+        }
+    }
+
+    unset($r);
+
+    exportCsv('user_sessions', [
+        'Session ID',
+        'User ID',
+        'User Email',
+        'User Role',
+        'Started',
+        'Ended',
+        'Duration',
+        'Status'
+    ], $rows
+    );
+
+    }
+
+}
+
 ?>
 
 
@@ -64,10 +119,11 @@ function formatDuration($seconds): string {
     <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 </head>
 <body class="container py-4">
- 
+
     <h1>Welcome, Admin</h1>
+    <a href="index.php?section=activity-logs&amp;action=export">Export Activity Logs</a>
     <a href="../../auth/signout.php">Sign Out</a>
- 
+
     <ul class="nav nav-tabs my-3" role="tablist">
         <li class="nav-item">
             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-logs" type="button">Activity logs</button>
@@ -76,10 +132,15 @@ function formatDuration($seconds): string {
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-sessions" type="button">User sessions</button>
         </li>
     </ul>
- 
+
     <div class="tab-content">
- 
+
         <!-- Activity logs -->
+    <div class="d-flex justify-content-between align-items-center my-3">
+    <h6 class="mb-0">Activity logs</h6>
+    <a class="btn btn-sm btn-primary"
+       href="index.php?section=activity-logs&amp;action=export">Export CSV</a>
+</div>
         <div class="tab-pane fade show active" id="tab-logs">
             <div class="table-responsive">
                 <table id="logsTable" class="table table-striped table-sm">
@@ -112,7 +173,7 @@ function formatDuration($seconds): string {
                 </table>
             </div>
         </div>
- 
+
         <!-- User sessions -->
         <div class="tab-pane fade" id="tab-sessions">
             <div class="table-responsive">
@@ -152,16 +213,16 @@ function formatDuration($seconds): string {
                 </table>
             </div>
         </div>
- 
+
     </div>
- 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
     <script>
         const logsTable     = new DataTable('#logsTable',     { pageLength: 25, order: [] });
         const sessionsTable = new DataTable('#sessionsTable', { pageLength: 25, order: [] });
- 
+
         // Re-fit columns when a tab becomes visible
         document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(btn => {
             btn.addEventListener('shown.bs.tab', () => {
@@ -204,17 +265,17 @@ function formatDuration($seconds): string {
 
             <div class="tab-pane fade" id="tab-sessions">
             <table id="sessionsTable" class="table table-striped">
-          <thead>
-              <tr>
-                  <th>Session ID</th><th>User</th><th>Role</th>
-                  <th>Started</th><th>Ended</th><th>Duration</th><th>Status</th>
-              </tr>
-          </thead>
-          <tbody>
-          <?php foreach ($sessions as $s): ?>
-              <?php $open = $s['session_end'] === null; ?>
-              <tr>
-                  <td><?= htmlspecialchars($s['session_id']) ?></td>
+            <thead>
+                <tr>
+                    <th>Session ID</th><th>User</th><th>Role</th>
+                    <th>Started</th><th>Ended</th><th>Duration</th><th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($sessions as $s): ?>
+                <?php $open = $s['session_end'] === null; ?>
+                <tr>
+                    <td><?= htmlspecialchars($s['session_id']) ?></td>
                   <td><?= htmlspecialchars($s['user_username'] ?? 'Deleted user') ?><br>
                       <small class="text-muted"><?= htmlspecialchars($s['user_email'] ?? '') ?></small></td>
                   <td><?= htmlspecialchars($s['user_role'] ?? '') ?></td>
@@ -240,4 +301,4 @@ function formatDuration($seconds): string {
         autoWidth: false,
     })
 </script>
-</html> -->
+</html>

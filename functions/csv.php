@@ -6,7 +6,7 @@ function exportCsv(string $filename, array $headers, array $rows):void {
     }
 
     $safeName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $filename);
-    $safeName = '_'.date('Y-m-d_His').'.csv';
+    $safeName = $safeName . '_' . date('Y-m-d_His') . '.csv';
 
     header('Content-Type: text/csv;charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $safeName . '"'); 
