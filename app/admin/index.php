@@ -121,7 +121,6 @@ if($action==='export'){
 <body class="container py-4">
 
     <h1>Welcome, Admin</h1>
-    <a href="index.php?section=activity-logs&amp;action=export">Export Activity Logs</a>
     <a href="../../auth/signout.php">Sign Out</a>
 
     <ul class="nav nav-tabs my-3" role="tablist">
